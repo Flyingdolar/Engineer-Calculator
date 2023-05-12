@@ -1,7 +1,11 @@
 #include <stdio.h>
 
 #include "calc.h"
-#include "tool.h"
+
+int printErr(const char *msg) {
+    printf("\033[1;31mE:%s\n\033[0m", msg);
+    return -1;
+}
 
 int main() {
     char filename[100];
@@ -16,7 +20,6 @@ int main() {
     if (fp == NULL) return printErr("File not found");
 
     fgets(data, 100, fp);
-    PRINTD(data);
     if (parseOpr(data, oprHead) == -1) printErr("Parse error");
     // if (calc(fp) == -1) printErr("Calc error");
     fclose(fp);
