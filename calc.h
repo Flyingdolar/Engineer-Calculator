@@ -47,7 +47,7 @@ struct OpElement {
         VARIABLE,
         INT,
         FLOAT
-    } type;
+    };
     Type type;
     variant<Operator, Variable, int, float> value;
 };
