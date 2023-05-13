@@ -1,1 +1,7 @@
-3 + 2 * 5 - 4 / 2
+int a, b, c; // integer variables
+float d,e ; // float variables
+a = 5 ;
+b = 7 ;
+c = (12 +23) / (a + 12) * (b + 8);
+d = c + 1.2 + sin 45;
+e = d + b * 5.6;
