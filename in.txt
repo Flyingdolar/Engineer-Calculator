@@ -1,7 +1,0 @@
-int ant, bee, car; // integer variables
-float digit, e ; // float variables
-ant = 5 ;
-bee = 7 ;
-car = (12 +23) / (ant + 12) * (bee + 8);
-digit = car + 1.2 + sin 45;
-e = digit + bee * 5.6;
