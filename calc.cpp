@@ -8,8 +8,9 @@
 
 using namespace std;
 
-regex pattern("/-?\\d+(\\.\\d+)?|[a-z]+|[=\\+\\-\\*\\/\\(\\)]/gm");
-regex comment("\\/\\/.*");
+regex pattern(R"(-?\d+(\.\d+)?|[a-z]+|[=\+\-\*\/\(\)])");
+regex comment(R"(\/\/.*)");
+regex digit(R"(-?\d+(\.\d+)?)");
 
 int setVariable(vector<string> strList, vector<Variable> &varList) {
     Variable var = {"", 0};
@@ -31,9 +32,8 @@ int setVariable(vector<string> strList, vector<Variable> &varList) {
 
 int parseElement(string str, Variable resVar, vector<OpElement> &opList, vector<Variable> &varList) {
     sregex_iterator it(str.begin(), str.end(), pattern), end_it;
-
     for (auto var : varList) {
-        if (var.name == it->str()) {
+        if (var.name.compare(it->str()) == 0) {
             resVar = var;
             break;
         }
@@ -44,7 +44,8 @@ int parseElement(string str, Variable resVar, vector<OpElement> &opList, vector<
         return -1;
     }
     ++it;
-    if (it->str() != "=") {
+    // 原本的: if (it->str() != "=")
+    if (it->str().compare("=") != 0) {
         PRINTERR("Invalid expression.");
         PRINTHINT("Please check if you have missed \"=\".");
         return -1;
@@ -53,8 +54,8 @@ int parseElement(string str, Variable resVar, vector<OpElement> &opList, vector<
     for (; it != end_it; ++it) {
         OpElement op;
         // Find if it is an operator (Match the string in opStr)
-        for (int idx = 0; idx < sizeof(opStr) / sizeof(opStr[0]); ++idx) {
-            if (it->str() == opStr[idx].first) {
+        for (size_t idx = 0; idx < sizeof(opStr) / sizeof(opStr[0]); ++idx) {
+            if (it->str().compare(opStr[idx].first) == 0) {
                 op.type = OpElement::Type::OPERATOR;
                 op.value = static_cast<Operator>(idx);
                 opList.push_back(op);
@@ -64,8 +65,8 @@ int parseElement(string str, Variable resVar, vector<OpElement> &opList, vector<
         if (op.type == OpElement::Type::OPERATOR) return 0;
 
         // Find if it is a constant (Match the string in constStr)
-        for (int idx = 0; idx < sizeof(constStr) / sizeof(constStr[0]); ++idx) {
-            if (it->str() == constStr[idx].first) {
+        for (size_t idx = 0; idx < sizeof(constStr) / sizeof(constStr[0]); ++idx) {
+            if (it->str().compare(constStr[idx].first) == 0) {
                 op.type = OpElement::Type::FLOAT;
                 op.value = constStr[idx].second;
                 opList.push_back(op);
@@ -76,7 +77,7 @@ int parseElement(string str, Variable resVar, vector<OpElement> &opList, vector<
 
         // Find if it is a variable (Match the string in varList)
         for (auto var : varList) {
-            if (var.name == it->str()) {
+            if (it->str().compare(var.name) == 0) {
                 op.type = OpElement::Type::VARIABLE;
                 op.value = var;
                 opList.push_back(op);
@@ -86,7 +87,7 @@ int parseElement(string str, Variable resVar, vector<OpElement> &opList, vector<
         if (op.type == OpElement::Type::VARIABLE) return 0;
 
         // Find if it is a number (Match the string in regex)
-        if (regex_match(it->str(), regex("/-?\\d+(\\.\\d+)?/gm"))) {
+        if (regex_match(it->str(), digit)) {
             if (it->str().find('.') == string::npos) {
                 op.type = OpElement::Type::INT;
                 op.value = stoi(it->str());
@@ -97,8 +98,12 @@ int parseElement(string str, Variable resVar, vector<OpElement> &opList, vector<
             opList.push_back(op);
             return 0;
         }
+
+        // Find if it is a semi-colon, End Process
+        if (it->str().compare(";") == 0) return 0;
+
         // If it is not any of the above, then it is an error
-        PRINTERR("Invalid expression.");
+        PRINTERR("Invalid expression \"" << it->str() << "\" found.");
         PRINTHINT("Please check if you have defined it.");
         return -1;
     }

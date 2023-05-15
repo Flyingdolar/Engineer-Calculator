@@ -1,7 +1,7 @@
-int a, b, c; // integer variables
-float d,e ; // float variables
-a = 5 ;
-b = 7 ;
-c = (12 +23) / (a + 12) * (b + 8);
-d = c + 1.2 + sin 45;
-e = d + b * 5.6;
+int ant, bee, car; // integer variables
+float digit, e ; // float variables
+ant = 5 ;
+bee = 7 ;
+car = (12 +23) / (ant + 12) * (bee + 8);
+digit = car + 1.2 + sin 45;
+e = digit + bee * 5.6;

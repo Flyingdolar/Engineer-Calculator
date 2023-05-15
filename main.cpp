@@ -61,9 +61,9 @@ int readFile(string fileName, vector<string> &strVar, vector<string> &strOpr) {
         if (line.empty()) continue;
 
         if (line.find('=') != string::npos)
-            strOpr.push_back(line);
+            strOpr.emplace_back(line);
         else
-            strVar.push_back(line);
+            strVar.emplace_back(line);
     }
 
     FIN.close();
@@ -116,15 +116,7 @@ int main(int argc, char *argv[]) {
     if (readFile(inFile, strVar, strOpr) == -1) return -1;
     // Set Variables and Calculate
     if (setVariable(strVar, varList) == -1) return -1;
-    // Print all variables
-    // for (auto var : varList) {
-    //     PRINT(var.name);
-    //     if (var.value.index() == 0)
-    //         PRINT("int = " << get<int>(var.value));
-    //     else
-    //         PRINT("float = " << get<float>(var.value));
-    // }
-    if (calculate(strOpr, varList) == -1) return -1;
+    // if (calculate(strOpr, varList) == -1) return -1;
     // Write Output File
     if (writeFile(outFile, varList) == -1) return -1;
 
