@@ -90,7 +90,7 @@ int setOperation(string str, int &resVar, vector<OpElement> &opList, vector<Vari
         return -1;
     }
     // Type of opList: vector<OpElement> &opList
-    if (get<int>(opList[1].value) == 14) {
+    if (get<int>(opList[1].value) == Operator::EQU) {
         resVar = get<int>(opList[0].value);
         opList.erase(opList.begin(), opList.begin() + 2);
     }

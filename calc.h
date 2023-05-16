@@ -9,7 +9,7 @@
 
 using namespace std;
 
-enum class Operator {
+enum Operator {
     ADD,
     SUB,
     MUL,
@@ -24,10 +24,10 @@ enum class Operator {
     RBR,
     LSP,
     RSP,
-    EQU
+    EQU = 14
 };
 
-enum class Constant {
+enum Constant {
     PI
 };
 

@@ -8,9 +8,9 @@
 
 using namespace std;
 
-// int setPosix(vector<OpElement> &opList, vector<Variable> &varList) {
-//     return 0;
-// }
+int setPosix(vector<OpElement> &opList, vector<Variable> &varList) {
+    return 0;
+}
 
 int calculate(vector<string> strList, vector<Variable> &varList) {
     for (auto &str : strList) {
@@ -18,7 +18,7 @@ int calculate(vector<string> strList, vector<Variable> &varList) {
         vector<OpElement> opList;
 
         if (setOperation(str, resVar, opList, varList) == -1) return -1;
-        // if (setPosix(opList, varList) == -1) return -1;
+        if (setPosix(opList, varList) == -1) return -1;
 
         // for (auto op : opList) {
         //     switch (op.type) {
