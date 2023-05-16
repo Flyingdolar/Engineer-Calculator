@@ -116,7 +116,7 @@ int main(int argc, char *argv[]) {
     if (readFile(inFile, strVar, strOpr) == -1) return -1;
     // Set Variables and Calculate
     if (setVariable(strVar, varList) == -1) return -1;
-    // if (calculate(strOpr, varList) == -1) return -1;
+    if (calculate(strOpr, varList) == -1) return -1;
     // Write Output File
     if (writeFile(outFile, varList) == -1) return -1;
 

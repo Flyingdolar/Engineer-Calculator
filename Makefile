@@ -4,7 +4,7 @@ LDLIBS = -lm
 
 .PHONY: all clean
 all: main.cpp
-	$(CC) $(CFLAGS) -o calculator main.cpp calc.cpp $(LDLIBS)
+	$(CC) $(CFLAGS) -o calculator main.cpp calc.cpp parser.cpp $(LDLIBS)
 
 clean:
 	if [ -f calculator ]; then rm calculator; fi

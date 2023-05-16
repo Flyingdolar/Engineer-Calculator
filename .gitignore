@@ -1,4 +1,5 @@
 # Test Files
+test/
 *.txt
 
 # Executeable files

@@ -2,6 +2,7 @@
 #include <math.h>
 
 #include <iostream>
+#include <regex>
 #include <string>
 #include <variant>
 #include <vector>
@@ -22,19 +23,19 @@ enum class Operator {
     LBR,
     RBR,
     LSP,
-    RSP
+    RSP,
+    EQU
 };
 
 enum class Constant {
-    PI,
-    E
+    PI
 };
 
 const pair<string, int> opStr[] = {
-    {"+", 1}, {"-", 1}, {"*", 2}, {"/", 2}, {"^", 3}, {"log", 3}, {"sqrt", 3}, {"sin", 3}, {"cos", 3}, {"tan", 3}, {"(", 0}, {")", 0}, {"[", 0}, {"]", 0}};
+    {"+", 1}, {"-", 1}, {"*", 2}, {"/", 2}, {"^", 3}, {"log", 3}, {"sqrt", 3}, {"sin", 3}, {"cos", 3}, {"tan", 3}, {"(", 0}, {")", 0}, {"[", 0}, {"]", 0}, {"=", 0}};
 
 const pair<string, float> constStr[] = {
-    {"pi", 3.1415926535897932384626433832795f}, {"e", 2.7182818284590452353602874713527f}};
+    {"pi", 3.1415926535897932384626433832795f}};
 
 struct Variable {
     string name;
@@ -43,14 +44,19 @@ struct Variable {
 
 struct OpElement {
     enum class Type {
+        EMPTY,
         OPERATOR,
         VARIABLE,
         INT,
         FLOAT
     };
     Type type;
-    variant<Operator, Variable, int, float> value;
+    variant<Operator, int, float> value;
 };
 
-int setVariable(vector<string> strList, vector<Variable>& varList);
-int calculate(vector<string> strList, vector<Variable>& varList);
+// Parser.cpp: Parser functions
+int setVariable(vector<string> strList, vector<Variable> &varList);
+int setOperation(string str, int &resVar, vector<OpElement> &opList, vector<Variable> &varList);
+
+// Calc.cpp: Calculator functions
+int calculate(vector<string> strList, vector<Variable> &varList);
