@@ -1,6 +1,6 @@
 # Engineer_Calculator
 
-> Contributed by Flyingdollar
+> Contributed by Flyingdollar / 鄭翔元
 
 ## 下載與安裝
 
