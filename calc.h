@@ -14,6 +14,8 @@ enum Operator {
     SUB,
     MUL,
     DIV,
+    POW,
+    MOD,
     EXP,
     LOG,
     SQRT,
@@ -24,18 +26,19 @@ enum Operator {
     RBR,
     LSP,
     RSP,
-    EQU = 14
+    EQU
 };
 
 enum Constant {
-    PI
+    PI,
+    NATURE
 };
 
 const pair<string, int> opStr[] = {
-    {"+", 1}, {"-", 1}, {"*", 2}, {"/", 2}, {"^", 3}, {"log", 3}, {"sqrt", 3}, {"sin", 3}, {"cos", 3}, {"tan", 3}, {"(", 0}, {")", 0}, {"[", 0}, {"]", 0}, {"=", 0}};
+    {"+", 1}, {"-", 1}, {"*", 2}, {"/", 2}, {"^", 3}, {"mod", 3}, {"exp", 3}, {"log", 3}, {"sqrt", 3}, {"sin", 3}, {"cos", 3}, {"tan", 3}, {"(", 0}, {")", 0}, {"[", 0}, {"]", 0}, {"=", 0}};
 
 const pair<string, float> constStr[] = {
-    {"pi", 3.1415926535897932384626433832795f}};
+    {"PI", acos(-1)}, {"E", 2.7182818284590452353602874713527f}};
 
 struct Variable {
     string name;
@@ -51,6 +54,7 @@ struct OpElement {
         FLOAT
     };
     Type type;
+    int getNum;
     variant<Operator, int, float> value;
 };
 

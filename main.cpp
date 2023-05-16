@@ -1,4 +1,5 @@
 #include <getopt.h>
+#include <string.h>
 #include <unistd.h>
 
 #include <fstream>
@@ -11,7 +12,7 @@
 
 using namespace std;
 
-const char *shortOpt = "i:o:h";
+const char *shortOpt = "i:o:hd";
 const option longOpt[] = {
     {"input", required_argument, nullptr, 'i'},
     {"output", required_argument, nullptr, 'o'},
@@ -19,8 +20,9 @@ const option longOpt[] = {
     {nullptr, 0, nullptr, 0}};
 
 void printHelp() {
-    PRINT("Specific input and output file name to run this program.");
+    PRINT("This is a Engineering Calculator.");
     PRINT("Parameters & Usages:");
+    PRINT("-d --direct             Run this program directly without any input or output file");
     PRINT("-i, --input <File Name>   Specific input file name");
     PRINT("-o, --output <File Name>  Specific output file name");
     PRINT("-h, --help               Show this help message");
@@ -28,17 +30,28 @@ void printHelp() {
 }
 
 int checkCmd(bool cmd[], string inFile, string outFile) {
-    if (!cmd[0] || inFile.empty()) {
+    if (cmd[0] && inFile.empty()) {
         PRINTERR("No input file specified.");
-        PRINTHINT("Parameter \"-i\" could missing.");
         PRINTHINT("File name should be defined after \"-i\".");
         return -1;
     }
 
-    if (!cmd[1] || outFile.empty()) {
+    if (cmd[1] && outFile.empty()) {
         PRINTERR("No output file specified.");
-        PRINTHINT("Parameter \"-o\" could missing.");
         PRINTHINT("File name should be defined after \"-o\".");
+        return -1;
+    }
+
+    if ((cmd[0] && !cmd[1]) || (!cmd[0] && cmd[1])) {
+        PRINTERR("Input and output file should be specified at the same time.");
+        PRINTHINT("Parameter \"-i\" and \"-o\" should be used together.");
+        return -1;
+    }
+
+    if (!(cmd[0] || cmd[1] || cmd[3])) {
+        PRINTERR("No function specified.");
+        PRINTHINT("Please use \"-i\" and \"-o\" to specify input and output file.");
+        PRINTHINT("Or use \"-d\" to do operate directly.");
         return -1;
     }
 
@@ -96,8 +109,8 @@ int writeFile(string fileName, vector<Variable> varList) {
 
 int main(int argc, char *argv[]) {
     int option;
-    bool cmd[3] = {false};
-    string inFile, outFile;
+    bool cmd[4] = {false};
+    string inFile, outFile, stdInput;
     vector<string> strVar, strOpr;
     vector<Variable> varList;
 
@@ -106,19 +119,30 @@ int main(int argc, char *argv[]) {
         if (option == 'i') cmd[0] = true, inFile = optarg;
         if (option == 'o') cmd[1] = true, outFile = optarg;
         if (option == 'h') cmd[2] = true, printHelp();
+        if (option == 'd') cmd[3] = true;
     }
 
     // Check Command Line Arguments
     if (cmd[2]) return 0;
     if (checkCmd(cmd, inFile, outFile) == -1) return -1;
 
-    // Open Input File
-    if (readFile(inFile, strVar, strOpr) == -1) return -1;
-    // Set Variables and Calculate
-    if (setVariable(strVar, varList) == -1) return -1;
-    if (calculate(strOpr, varList) == -1) return -1;
-    // Write Output File
-    if (writeFile(outFile, varList) == -1) return -1;
+    if (cmd[0] && cmd[1]) {
+        // Open Input File
+        if (readFile(inFile, strVar, strOpr) == -1) return -1;
+        // Set Variables and Calculate
+        if (setVariable(strVar, varList) == -1) return -1;
+        if (calculate(strOpr, varList) == -1) return -1;
+        // Write Output File
+        if (writeFile(outFile, varList) == -1) return -1;
+        cout << "Result has been written to file: " << outFile << endl;
+    }
+    if (cmd[3]) {
+        PRINT("Please input the expression you want to calculate.");
+        cout << ">>> ";
+        getline(cin, stdInput), strOpr.push_back(stdInput);
+        cout << "Result: ";
+        if (calculate(strOpr, varList) == -1) return -1;
+    }
 
     return 0;
 }

@@ -41,6 +41,12 @@ int setOperation(string str, int &resVar, vector<OpElement> &opList, vector<Vari
             if (it->str().compare(op.first) == 0) {
                 element.type = OpElement::Type::OPERATOR;
                 element.value = index;
+                if (index < 6)
+                    element.getNum = 2;
+                else if (index < 11)
+                    element.getNum = 1;
+                else
+                    element.getNum = 0;
                 opList.push_back(element);
                 break;
             }
@@ -73,13 +79,8 @@ int setOperation(string str, int &resVar, vector<OpElement> &opList, vector<Vari
         // Find if it is a number (Match the string in regex)
         if (element.type != OpElement::Type::EMPTY) continue;
         if (regex_match(it->str(), digit)) {
-            if (it->str().find('.') == string::npos) {
-                element.type = OpElement::Type::INT;
-                element.value = stoi(it->str());
-            } else {
-                element.type = OpElement::Type::FLOAT;
-                element.value = stof(it->str());
-            }
+            element.type = OpElement::Type::FLOAT;
+            element.value = stof(it->str());
             opList.push_back(element);
             continue;
         }
@@ -90,9 +91,11 @@ int setOperation(string str, int &resVar, vector<OpElement> &opList, vector<Vari
         return -1;
     }
     // Type of opList: vector<OpElement> &opList
-    if (get<int>(opList[1].value) == Operator::EQU) {
-        resVar = get<int>(opList[0].value);
-        opList.erase(opList.begin(), opList.begin() + 2);
+    if (opList.size() > 2) {
+        if (get<int>(opList[1].value) == Operator::EQU) {
+            resVar = get<int>(opList[0].value);
+            opList.erase(opList.begin(), opList.begin() + 2);
+        }
     }
     return 0;
 }
